@@ -10,6 +10,10 @@
 
 *English version: [README.md](README.md)*
 
+<p align="center">
+  <img src="docs/screenshot-log.jpg" alt="Журнал уведомлений: что пришло и что заблокировано" width="320">
+</p>
+
 ---
 
 ## Зачем это нужно

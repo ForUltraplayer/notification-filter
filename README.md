@@ -9,6 +9,10 @@
 
 *Русская версия: [README.ru.md](README.ru.md)*
 
+<p align="center">
+  <img src="docs/screenshot-log.jpg" alt="Notification log: what arrived, what was blocked" width="320">
+</p>
+
 ---
 
 ## The problem
