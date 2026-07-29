@@ -9,9 +9,9 @@
 
 *Русская версия: [README.ru.md](README.ru.md)*
 
-<p align="center">
-  <img src="docs/screenshot-log.jpg" alt="Notification log: what arrived, what was blocked" width="320">
-</p>
+| Rule editor | Log | Settings |
+|:---:|:---:|:---:|
+| <img src="docs/screenshot-rule.jpg" alt="Rule editor: app, mode, fields and the pattern" width="240"> | <img src="docs/screenshot-log.jpg" alt="Notification log: what arrived, what was blocked" width="240"> | <img src="docs/screenshot-settings.jpg" alt="Settings: master switch, what to inspect, log retention" width="240"> |
 
 ---
 
