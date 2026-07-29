@@ -1,0 +1,23 @@
+# Build output
+/build
+/app/build
+.gradle
+.cxx
+.externalNativeBuild
+/captures
+
+# Machine-specific SDK location
+local.properties
+
+# Signing material must never be committed
+*.jks
+*.keystore
+keystore.properties
+
+# IDE
+*.iml
+/.idea
+*.hprof
+
+# macOS
+.DS_Store

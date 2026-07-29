@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Push Filter</string>
+
+    <string name="nav_rules">Rules</string>
+    <string name="nav_log">Log</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="access_required_title">Notification access required</string>
+    <string name="access_required_body">Push Filter can read and dismiss notifications only after you enable it in the system notification access list.</string>
+    <string name="access_grant">Open system settings</string>
+    <string name="paused_title">Filtering is paused</string>
+    <string name="paused_body">Rules are kept but nothing is blocked right now.</string>
+    <string name="paused_resume">Resume</string>
+
+    <string name="rules_empty_title">No rules yet</string>
+    <string name="rules_empty_body">Add a rule to drop the ads an app sends while keeping the notifications you actually need.</string>
+    <string name="rules_add">New rule</string>
+    <string name="all_apps">All applications</string>
+
+    <string name="rule_mode_block">Block matches</string>
+    <string name="rule_mode_allow">Allow only matches</string>
+    <string name="rule_mode_block_badge">Block</string>
+    <string name="rule_mode_allow_badge">Allow only</string>
+    <string name="rule_target_title">Title</string>
+    <string name="rule_target_text">Text</string>
+    <string name="rule_target_both">Title and text</string>
+    <string name="rule_disabled">Off</string>
+    <string name="rule_untitled">Untitled rule</string>
+    <string name="rule_group_ignored">Ignored</string>
+
+    <string name="delete_rule_title">Delete rule?</string>
+    <string name="delete_rule_message">Notifications matched by this rule will no longer be filtered.</string>
+
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+
+    <string name="editor_title_new">New rule</string>
+    <string name="editor_title_edit">Edit rule</string>
+    <string name="editor_app_label">Application</string>
+    <string name="editor_app_choose">Choose an application</string>
+    <string name="editor_name_label">Rule name</string>
+    <string name="editor_name_placeholder">Promotions</string>
+    <string name="editor_mode_label">Mode</string>
+    <string name="editor_mode_block_hint">A notification is dismissed when the pattern matches. Everything else gets through.</string>
+    <string name="editor_mode_allow_hint">Only notifications matching the pattern get through. Everything else from this app is dismissed.</string>
+    <string name="editor_target_label">Match against</string>
+    <string name="editor_pattern_label">Regular expression</string>
+    <string name="editor_pattern_placeholder">sale|discount|promo</string>
+    <string name="editor_pattern_help">Java syntax, searched anywhere in the text. Use ^ and $ to anchor to a line.</string>
+    <string name="editor_pattern_empty">Enter a regular expression</string>
+    <string name="editor_case_sensitive">Case sensitive</string>
+    <string name="editor_enabled">Rule is active</string>
+    <string name="editor_tester_label">Try it out</string>
+    <string name="editor_tester_hint">Paste a real notification to see what the rule would do.</string>
+    <string name="editor_tester_title_field">Sample title</string>
+    <string name="editor_tester_text_field">Sample text</string>
+    <string name="tester_matched">Pattern matches</string>
+    <string name="tester_not_matched">Pattern does not match</string>
+    <string name="tester_would_block">This notification would be blocked</string>
+    <string name="tester_would_pass">This notification would get through</string>
+
+    <string name="picker_title">Choose an application</string>
+    <string name="picker_search">Search</string>
+    <string name="picker_system_apps">Show system apps</string>
+    <string name="picker_all_apps_hint">The rule applies to every application</string>
+
+    <string name="log_empty_title">Nothing here yet</string>
+    <string name="log_empty_body">Notifications show up here as soon as they arrive. Open one to build a rule from it.</string>
+    <string name="log_filter_all">All</string>
+    <string name="log_filter_blocked">Blocked</string>
+    <string name="log_filter_passed">Passed</string>
+    <string name="log_search">Search the log</string>
+    <string name="log_app_any">Any application</string>
+    <string name="log_badge_blocked">Blocked</string>
+    <string name="log_badge_passed">Passed</string>
+    <string name="log_clear">Clear the log</string>
+    <string name="log_clear_title">Clear the log?</string>
+    <string name="log_clear_message">Every recorded notification will be removed. Rules are not affected.</string>
+    <string name="log_no_title">(no title)</string>
+    <string name="log_detail_package">Package</string>
+    <string name="log_detail_time">Received</string>
+    <string name="log_detail_rule">Rule</string>
+    <string name="log_detail_reason">Verdict</string>
+    <string name="log_detail_pattern">Pattern</string>
+    <string name="log_create_rule">Create a rule from this</string>
+    <string name="log_copy">Copy text</string>
+    <string name="log_copied">Copied</string>
+    <string name="log_ignore_app">Ignore this app</string>
+    <string name="log_ignored_done">%1$s is ignored from now on</string>
+    <string name="log_ignored_clear">Clear its entries</string>
+
+    <string name="reason_no_rules">No rules for this application</string>
+    <string name="reason_no_block_rule_matched">No blocking rule matched</string>
+    <string name="reason_blocked_by_rule">Matched a blocking rule</string>
+    <string name="reason_allowed_by_rule">Matched an allowing rule</string>
+    <string name="reason_no_allow_rule_matched">Matched none of the allowing rules</string>
+
+    <string name="settings_section_service">Service</string>
+    <string name="settings_section_capture">What to inspect</string>
+    <string name="settings_section_log">Log</string>
+    <string name="settings_section_ignored">Ignored applications</string>
+    <string name="settings_ignored_hint">These applications are skipped completely: nothing is filtered and nothing reaches the log.</string>
+    <string name="settings_ignored_manage">Manage the list</string>
+    <string name="settings_ignored_none">Nothing is ignored</string>
+    <string name="ignored_title">Ignored applications</string>
+    <string name="ignored_add">Add an application</string>
+    <string name="ignored_empty_title">The list is empty</string>
+    <string name="ignored_empty_body">Add the apps you never want filtered or recorded, such as a messenger you read every message of.</string>
+    <string name="ignored_remove">Stop ignoring</string>
+
+    <string name="settings_section_backup">Rules backup</string>
+    <string name="settings_section_stats">Statistics</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_filtering">Filtering enabled</string>
+    <string name="settings_filtering_hint">Master switch. Rules are kept when it is off.</string>
+    <string name="settings_ignore_ongoing">Skip ongoing notifications</string>
+    <string name="settings_ignore_ongoing_hint">Media players, downloads, navigation and other notifications you cannot swipe away.</string>
+    <string name="settings_ignore_group">Skip group summaries</string>
+    <string name="settings_ignore_group_hint">The collapsed header a bundle of notifications gets. It usually carries no text of its own.</string>
+    <string name="settings_log_passed">Log passed notifications</string>
+    <string name="settings_log_passed_hint">Keeps every notification, not just the blocked ones, so you can write patterns from real examples.</string>
+    <string name="settings_retention">Keep the log for</string>
+    <string name="settings_retention_forever">Forever</string>
+    <string name="settings_export">Export rules</string>
+    <string name="settings_export_hint">Writes every rule to a JSON file.</string>
+    <string name="settings_import">Import rules</string>
+    <string name="settings_import_hint">Reads rules back from a JSON file.</string>
+    <string name="settings_import_title">Import rules</string>
+    <string name="settings_import_message">Add the imported rules to the existing ones, or replace everything?</string>
+    <string name="settings_import_replace">Replace</string>
+    <string name="settings_import_merge">Add</string>
+    <string name="settings_export_done">Exported rules: %1$d</string>
+    <string name="settings_import_done">Imported rules: %1$d</string>
+    <string name="settings_backup_error">Could not read the file</string>
+    <string name="settings_stat_blocked">Blocked</string>
+    <string name="settings_stat_passed">Passed</string>
+    <string name="settings_stat_rules">Rules</string>
+    <string name="settings_about_body">Android hands a notification to listeners only after posting it, so a blocked notification can flash for a moment before it is dismissed. Sound and vibration are chosen by the sending app and cannot always be suppressed.</string>
+    <string name="settings_version">Version %1$s</string>
+
+    <plurals name="ignored_count">
+        <item quantity="one">%d application</item>
+        <item quantity="other">%d applications</item>
+    </plurals>
+
+    <plurals name="rules_count">
+        <item quantity="one">%d rule</item>
+        <item quantity="other">%d rules</item>
+    </plurals>
+
+    <plurals name="retention_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+</resources>

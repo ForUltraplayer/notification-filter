@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Funnel: the notification stream narrowed down to what you asked for. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,30 L80,30 L80,36 L61,58 L61,78 L47,71 L47,58 L28,36 Z" />
+
+    <!-- Discarded notifications falling away from the funnel. -->
+    <path
+        android:pathData="M69,64 L83,78 M83,64 L69,78"
+        android:strokeColor="#FF8A80"
+        android:strokeWidth="5"
+        android:strokeLineCap="round" />
+</vector>

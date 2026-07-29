@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_rules">Правила</string>
+    <string name="nav_log">Журнал</string>
+    <string name="nav_settings">Настройки</string>
+
+    <string name="access_required_title">Нужен доступ к уведомлениям</string>
+    <string name="access_required_body">Push Filter сможет читать и убирать уведомления только после того, как вы включите его в системном списке доступа к уведомлениям.</string>
+    <string name="access_grant">Открыть настройки системы</string>
+    <string name="paused_title">Фильтрация приостановлена</string>
+    <string name="paused_body">Правила сохранены, но сейчас ничего не блокируется.</string>
+    <string name="paused_resume">Возобновить</string>
+
+    <string name="rules_empty_title">Правил пока нет</string>
+    <string name="rules_empty_body">Добавьте правило, чтобы убрать рекламу от приложения и оставить действительно нужные уведомления.</string>
+    <string name="rules_add">Новое правило</string>
+    <string name="all_apps">Все приложения</string>
+
+    <string name="rule_mode_block">Блокировать совпадения</string>
+    <string name="rule_mode_allow">Пропускать только совпадения</string>
+    <string name="rule_mode_block_badge">Блокировать</string>
+    <string name="rule_mode_allow_badge">Только это</string>
+    <string name="rule_target_title">Заголовок</string>
+    <string name="rule_target_text">Текст</string>
+    <string name="rule_target_both">Заголовок и текст</string>
+    <string name="rule_disabled">Выкл.</string>
+    <string name="rule_untitled">Правило без названия</string>
+    <string name="rule_group_ignored">Игнорируется</string>
+
+    <string name="delete_rule_title">Удалить правило?</string>
+    <string name="delete_rule_message">Уведомления, подходящие под это правило, больше не будут фильтроваться.</string>
+
+    <string name="action_delete">Удалить</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_back">Назад</string>
+    <string name="action_close">Закрыть</string>
+
+    <string name="editor_title_new">Новое правило</string>
+    <string name="editor_title_edit">Изменение правила</string>
+    <string name="editor_app_label">Приложение</string>
+    <string name="editor_app_choose">Выберите приложение</string>
+    <string name="editor_name_label">Название правила</string>
+    <string name="editor_name_placeholder">Реклама</string>
+    <string name="editor_mode_label">Режим</string>
+    <string name="editor_mode_block_hint">Уведомление убирается, если выражение совпало. Остальные проходят как обычно.</string>
+    <string name="editor_mode_allow_hint">Проходят только уведомления, совпавшие с выражением. Всё остальное от этого приложения убирается.</string>
+    <string name="editor_target_label">Искать в</string>
+    <string name="editor_pattern_label">Регулярное выражение</string>
+    <string name="editor_pattern_placeholder">скидк|акци|распродаж</string>
+    <string name="editor_pattern_help">Синтаксис Java, поиск идёт по всему тексту. Используйте ^ и $ для привязки к строке.</string>
+    <string name="editor_pattern_empty">Введите регулярное выражение</string>
+    <string name="editor_case_sensitive">Учитывать регистр</string>
+    <string name="editor_enabled">Правило включено</string>
+    <string name="editor_tester_label">Проверка</string>
+    <string name="editor_tester_hint">Вставьте настоящее уведомление, чтобы увидеть, что сделает правило.</string>
+    <string name="editor_tester_title_field">Пример заголовка</string>
+    <string name="editor_tester_text_field">Пример текста</string>
+    <string name="tester_matched">Выражение совпадает</string>
+    <string name="tester_not_matched">Выражение не совпадает</string>
+    <string name="tester_would_block">Такое уведомление будет заблокировано</string>
+    <string name="tester_would_pass">Такое уведомление пройдёт</string>
+
+    <string name="picker_title">Выбор приложения</string>
+    <string name="picker_search">Поиск</string>
+    <string name="picker_system_apps">Показывать системные</string>
+    <string name="picker_all_apps_hint">Правило действует для всех приложений</string>
+
+    <string name="log_empty_title">Пока пусто</string>
+    <string name="log_empty_body">Уведомления появятся здесь сразу после получения. Откройте любое, чтобы сделать из него правило.</string>
+    <string name="log_filter_all">Все</string>
+    <string name="log_filter_blocked">Заблокированные</string>
+    <string name="log_filter_passed">Пропущенные</string>
+    <string name="log_search">Поиск по журналу</string>
+    <string name="log_app_any">Любое приложение</string>
+    <string name="log_badge_blocked">Заблокировано</string>
+    <string name="log_badge_passed">Пропущено</string>
+    <string name="log_clear">Очистить журнал</string>
+    <string name="log_clear_title">Очистить журнал?</string>
+    <string name="log_clear_message">Все записанные уведомления будут удалены. Правила не пострадают.</string>
+    <string name="log_no_title">(без заголовка)</string>
+    <string name="log_detail_package">Пакет</string>
+    <string name="log_detail_time">Получено</string>
+    <string name="log_detail_rule">Правило</string>
+    <string name="log_detail_reason">Вердикт</string>
+    <string name="log_detail_pattern">Выражение</string>
+    <string name="log_create_rule">Создать правило из этого</string>
+    <string name="log_copy">Копировать текст</string>
+    <string name="log_copied">Скопировано</string>
+    <string name="log_ignore_app">Игнорировать приложение</string>
+    <string name="log_ignored_done">%1$s больше не отслеживается</string>
+    <string name="log_ignored_clear">Убрать записи</string>
+
+    <string name="reason_no_rules">Нет правил для этого приложения</string>
+    <string name="reason_no_block_rule_matched">Ни одно блокирующее правило не совпало</string>
+    <string name="reason_blocked_by_rule">Совпало с блокирующим правилом</string>
+    <string name="reason_allowed_by_rule">Совпало с разрешающим правилом</string>
+    <string name="reason_no_allow_rule_matched">Не совпало ни с одним разрешающим правилом</string>
+
+    <string name="settings_section_service">Служба</string>
+    <string name="settings_section_capture">Что проверять</string>
+    <string name="settings_section_log">Журнал</string>
+    <string name="settings_section_ignored">Игнорируемые приложения</string>
+    <string name="settings_ignored_hint">Эти приложения пропускаются полностью: ничего не фильтруется и ничего не попадает в журнал.</string>
+    <string name="settings_ignored_manage">Изменить список</string>
+    <string name="settings_ignored_none">Список пуст</string>
+    <string name="ignored_title">Игнорируемые приложения</string>
+    <string name="ignored_add">Добавить приложение</string>
+    <string name="ignored_empty_title">Список пуст</string>
+    <string name="ignored_empty_body">Добавьте сюда приложения, которые не нужно ни фильтровать, ни записывать, — например мессенджер, где вы читаете все сообщения.</string>
+    <string name="ignored_remove">Убрать из списка</string>
+
+    <string name="settings_section_backup">Резервная копия правил</string>
+    <string name="settings_section_stats">Статистика</string>
+    <string name="settings_section_about">О программе</string>
+    <string name="settings_filtering">Фильтрация включена</string>
+    <string name="settings_filtering_hint">Главный выключатель. Правила сохраняются, когда он выключен.</string>
+    <string name="settings_ignore_ongoing">Пропускать постоянные уведомления</string>
+    <string name="settings_ignore_ongoing_hint">Плееры, загрузки, навигация и прочие уведомления, которые нельзя смахнуть.</string>
+    <string name="settings_ignore_group">Пропускать сводки групп</string>
+    <string name="settings_ignore_group_hint">Свёрнутый заголовок пачки уведомлений. Своего текста у него обычно нет.</string>
+    <string name="settings_log_passed">Записывать пропущенные</string>
+    <string name="settings_log_passed_hint">Сохраняет все уведомления, а не только заблокированные, чтобы писать выражения по реальным примерам.</string>
+    <string name="settings_retention">Хранить журнал</string>
+    <string name="settings_retention_forever">Бессрочно</string>
+    <string name="settings_export">Экспорт правил</string>
+    <string name="settings_export_hint">Сохраняет все правила в файл JSON.</string>
+    <string name="settings_import">Импорт правил</string>
+    <string name="settings_import_hint">Читает правила обратно из файла JSON.</string>
+    <string name="settings_import_title">Импорт правил</string>
+    <string name="settings_import_message">Добавить импортируемые правила к существующим или заменить всё?</string>
+    <string name="settings_import_replace">Заменить</string>
+    <string name="settings_import_merge">Добавить</string>
+    <string name="settings_export_done">Экспортировано правил: %1$d</string>
+    <string name="settings_import_done">Импортировано правил: %1$d</string>
+    <string name="settings_backup_error">Не удалось прочитать файл</string>
+    <string name="settings_stat_blocked">Заблокировано</string>
+    <string name="settings_stat_passed">Пропущено</string>
+    <string name="settings_stat_rules">Правил</string>
+    <string name="settings_about_body">Android отдаёт уведомление службам-слушателям уже после показа, поэтому заблокированное уведомление может на мгновение мелькнуть перед удалением. Звук и вибрацию задаёт приложение-отправитель, подавить их удаётся не всегда.</string>
+    <string name="settings_version">Версия %1$s</string>
+
+    <plurals name="ignored_count">
+        <item quantity="one">%d приложение</item>
+        <item quantity="few">%d приложения</item>
+        <item quantity="many">%d приложений</item>
+        <item quantity="other">%d приложения</item>
+    </plurals>
+
+    <plurals name="rules_count">
+        <item quantity="one">%d правило</item>
+        <item quantity="few">%d правила</item>
+        <item quantity="many">%d правил</item>
+        <item quantity="other">%d правила</item>
+    </plurals>
+
+    <plurals name="retention_days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дня</item>
+    </plurals>
+</resources>
