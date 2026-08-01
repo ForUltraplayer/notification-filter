@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -79,9 +82,23 @@ fun AppPickerDialog(
 
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        // Letting the dialog window fit the system windows would leave the list underneath the
+        // keyboard, so the insets are applied to the content instead. The status and navigation
+        // bars stay outside the surface, which keeps the system icons on the dimmed backdrop
+        // they were drawn on before. Ime padding comes first: an open keyboard already covers
+        // the navigation bar.
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+        ),
     ) {
-        Surface(modifier = Modifier.fillMaxSize()) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .imePadding()
+                .navigationBarsPadding(),
+        ) {
             Column(Modifier.fillMaxSize()) {
                 TopAppBar(
                     title = { Text(stringResource(R.string.picker_title)) },

@@ -1,5 +1,6 @@
 package ru.krestnikov.pushfilter.ui.rules
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,19 +9,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -92,6 +95,8 @@ fun RuleEditorScreen(target: EditorTarget, onClose: () -> Unit) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
     var showEmptyPatternError by rememberSaveable { mutableStateOf(false) }
+    // Somebody writing their first rule needs the examples; somebody fixing an old one does not.
+    var showExamples by rememberSaveable { mutableStateOf(existing == null) }
 
     val syntaxError = remember(pattern) {
         if (pattern.isEmpty()) null else RegexCache.errorOf(pattern)
@@ -124,6 +129,9 @@ fun RuleEditorScreen(target: EditorTarget, onClose: () -> Unit) {
     }
 
     Scaffold(
+        // The activity draws edge to edge, so the keyboard overlaps the window instead of
+        // resizing it. Without this the fields at the bottom cannot be scrolled into view.
+        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
                 title = {
@@ -141,20 +149,18 @@ fun RuleEditorScreen(target: EditorTarget, onClose: () -> Unit) {
                         )
                     }
                 },
+                // Saving lives in the bar rather than in a fab: every field here opens the
+                // keyboard, and a bottom button would spend most of its life behind it.
                 actions = {
                     if (existing != null) {
                         IconButton(onClick = { confirmDelete = true }) {
                             Icon(Icons.Filled.Delete, stringResource(R.string.action_delete))
                         }
                     }
+                    TextButton(onClick = onSave) {
+                        Text(stringResource(R.string.action_save))
+                    }
                 },
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onSave,
-                icon = { Icon(Icons.Filled.Check, contentDescription = null) },
-                text = { Text(stringResource(R.string.action_save)) },
             )
         },
     ) { padding ->
@@ -244,6 +250,7 @@ fun RuleEditorScreen(target: EditorTarget, onClose: () -> Unit) {
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
+            PatternExamples(expanded = showExamples, onToggle = { showExamples = !showExamples })
 
             SwitchRow(
                 title = stringResource(R.string.editor_case_sensitive),
@@ -272,7 +279,7 @@ fun RuleEditorScreen(target: EditorTarget, onClose: () -> Unit) {
                 ),
                 patternValid = pattern.isNotEmpty() && syntaxError == null,
             )
-            Spacer(Modifier.height(88.dp))
+            Spacer(Modifier.height(24.dp))
         }
     }
 
@@ -354,6 +361,69 @@ private fun AppSelector(packageName: String, onClick: () -> Unit) {
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
+        }
+    }
+}
+
+/** Pattern and the plain words explaining it, in the order they are shown. */
+private val PATTERN_EXAMPLES = listOf(
+    R.string.editor_example_word to R.string.editor_example_word_hint,
+    R.string.editor_example_any to R.string.editor_example_any_hint,
+    R.string.editor_example_start to R.string.editor_example_start_hint,
+    R.string.editor_example_digits to R.string.editor_example_digits_hint,
+)
+
+@Composable
+private fun PatternExamples(expanded: Boolean, onToggle: () -> Unit) {
+    Column(Modifier.fillMaxWidth()) {
+        TextButton(onClick = onToggle) {
+            Text(stringResource(R.string.editor_examples_title))
+            Spacer(Modifier.width(4.dp))
+            Icon(
+                imageVector = if (expanded) {
+                    Icons.Filled.KeyboardArrowUp
+                } else {
+                    Icons.Filled.KeyboardArrowDown
+                },
+                contentDescription = null,
+            )
+        }
+        if (!expanded) return@Column
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            ),
+        ) {
+            Column(Modifier.padding(12.dp)) {
+                PATTERN_EXAMPLES.forEachIndexed { index, (pattern, hint) ->
+                    if (index > 0) Spacer(Modifier.height(10.dp))
+                    Text(
+                        text = stringResource(pattern),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = FontFamily.Monospace,
+                        modifier = Modifier
+                            .background(
+                                MaterialTheme.colorScheme.surface,
+                                RoundedCornerShape(4.dp),
+                            )
+                            .padding(horizontal = 6.dp, vertical = 2.dp),
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = stringResource(hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = stringResource(R.string.editor_examples_note),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

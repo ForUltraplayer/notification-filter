@@ -55,7 +55,7 @@ and open it on your phone. You will need to allow installation from your browser
 With a cable:
 
 ```bash
-adb install push-filter-1.1.apk
+adb install push-filter-1.2.apk
 ```
 
 ### First run
@@ -88,9 +88,10 @@ confirmations while separately blocking one marketing phrase across every app on
 
 ## Writing rules
 
-Patterns use Java regular expression syntax. They are **searched anywhere** in the text, so
-`sale` matches `Big sale today` — you do not need `.*` around it. Matching ignores case unless
-you turn on *Case sensitive*, and `^`/`$` anchor to a line rather than the whole text.
+Patterns are ordinary regular expressions — `|`, `^`, `$`, `\d`, `{2,4}` all mean what you expect.
+They are **searched anywhere** in the text, so `sale` matches `Big sale today` — you do not need
+`.*` around it. Matching ignores case unless you turn on *Case sensitive*, and `^`/`$` anchor to a
+line rather than the whole text. The editor keeps a few worked examples next to the field.
 
 | Goal | Pattern | Mode |
 | --- | --- | --- |
