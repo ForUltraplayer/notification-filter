@@ -1,3 +1,5 @@
+<img src="docs/icon-200.png" alt="Push Filter icon: a funnel with a notification falling away from it" width="88">
+
 # Push Filter
 
 **Regex notification filtering for Android.** Silence the ads an app sends without silencing the app.
@@ -57,6 +59,9 @@ With a cable:
 ```bash
 adb install push-filter-1.3.apk
 ```
+
+Questions, reports and discussion: the [4PDA thread](https://4pda.to/forum/index.php?showtopic=1124713),
+in Russian.
 
 ### First run
 
