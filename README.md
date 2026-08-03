@@ -38,7 +38,7 @@ expressions you write.
   One tap turns any log entry into a rule with the app and text pre-filled.
 - **Ignore list.** Applications you never want touched are skipped before any other work, so a
   chatty messenger costs nothing and never reaches the log.
-- **Backup.** Export and import all rules and the ignore list as readable JSON.
+- **Backup.** Export and import the rules, the ignore list and every setting as readable JSON.
 - **Log retention.** Keep the log for 1, 7, 30 days or forever; old entries are pruned
   automatically.
 - **Private by construction.** No network permission, no analytics, no accounts. Notification
@@ -55,7 +55,7 @@ and open it on your phone. You will need to allow installation from your browser
 With a cable:
 
 ```bash
-adb install push-filter-1.2.apk
+adb install push-filter-1.3.apk
 ```
 
 ### First run
@@ -111,11 +111,12 @@ Two shortcuts worth knowing:
 
 ## Backup format
 
-Export produces readable JSON, so rules can be edited by hand or shared:
+Export produces readable JSON — the rules, the ignore list and every setting — so a backup can be
+edited by hand or shared:
 
 ```json
 {
-  "format": 1,
+  "format": 2,
   "exportedAt": 1753795200000,
   "rules": [
     {
@@ -128,13 +129,25 @@ Export produces readable JSON, so rules can be edited by hand or shared:
       "enabled": true
     }
   ],
-  "ignoredApps": ["org.telegram.messenger"]
+  "ignoredApps": ["org.telegram.messenger"],
+  "settings": {
+    "filteringEnabled": true,
+    "logAllowed": true,
+    "ignoreOngoing": true,
+    "ignoreGroupSummary": true,
+    "retentionDays": 7
+  }
 }
 ```
 
 `mode` is `BLOCK` or `ALLOW`, `target` is `TITLE`, `TEXT` or `BOTH`, and `package` may be `*` for
-a rule that applies everywhere. On import you choose whether to replace everything or add to what
-you already have.
+a rule that applies everywhere. Every field of `settings` is optional and falls back to its
+default, and a file without the object at all — anything exported before format 2 — is still
+imported, leaving the settings on this phone untouched.
+
+On import you choose whether to replace everything or add to what you already have. *Replace*
+restores the settings as well; *Add* only brings in the rules and the ignore list, because there
+is no sensible way to merge two switches.
 
 ## Build from source
 

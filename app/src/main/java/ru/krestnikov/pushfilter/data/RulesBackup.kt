@@ -6,12 +6,15 @@ import org.json.JSONObject
 data class BackupData(
     val rules: List<FilterRule>,
     val ignoredApps: Set<String>,
+    /** Null when the file predates format 2 and carries no settings at all. */
+    val settings: Settings? = null,
 )
 
-/** Human-readable JSON so rules can be edited or shared outside the app. */
+/** Human-readable JSON so a backup can be edited or shared outside the app. */
 object RulesBackup {
 
-    private const val FORMAT_VERSION = 1
+    /** 2 added the settings object; a reader of either version ignores what it does not know. */
+    private const val FORMAT_VERSION = 2
 
     fun encode(data: BackupData): String {
         val array = JSONArray()
@@ -33,7 +36,16 @@ object RulesBackup {
             put("exportedAt", System.currentTimeMillis())
             put("rules", array)
             put("ignoredApps", JSONArray(data.ignoredApps.toList()))
+            data.settings?.let { put("settings", encodeSettings(it)) }
         }.toString(2)
+    }
+
+    private fun encodeSettings(settings: Settings): JSONObject = JSONObject().apply {
+        put("filteringEnabled", settings.filteringEnabled)
+        put("logAllowed", settings.logAllowed)
+        put("ignoreOngoing", settings.ignoreOngoing)
+        put("ignoreGroupSummary", settings.ignoreGroupSummary)
+        put("retentionDays", settings.retentionDays)
     }
 
     /** Throws [org.json.JSONException] when [json] is not a rules backup. */
@@ -42,6 +54,23 @@ object RulesBackup {
         return BackupData(
             rules = decodeRules(root.getJSONArray("rules")),
             ignoredApps = decodeIgnored(root.optJSONArray("ignoredApps")),
+            settings = decodeSettings(root.optJSONObject("settings")),
+        )
+    }
+
+    /** Each field falls back to its default, so a hand-written file may list only a few. */
+    private fun decodeSettings(obj: JSONObject?): Settings? {
+        if (obj == null) return null
+        val defaults = Settings()
+        return Settings(
+            filteringEnabled = obj.optBoolean("filteringEnabled", defaults.filteringEnabled),
+            logAllowed = obj.optBoolean("logAllowed", defaults.logAllowed),
+            ignoreOngoing = obj.optBoolean("ignoreOngoing", defaults.ignoreOngoing),
+            ignoreGroupSummary = obj.optBoolean(
+                "ignoreGroupSummary",
+                defaults.ignoreGroupSummary,
+            ),
+            retentionDays = obj.optInt("retentionDays", defaults.retentionDays),
         )
     }
 

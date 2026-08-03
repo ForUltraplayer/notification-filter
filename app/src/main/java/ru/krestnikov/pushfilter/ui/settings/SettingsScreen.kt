@@ -82,6 +82,7 @@ fun SettingsScreen(
                 val data = BackupData(
                     rules = container.rules.snapshot(),
                     ignoredApps = container.ignored.ignored.value,
+                    settings = container.settings.current(),
                 )
                 context.contentResolver.openOutputStream(uri)?.use { stream ->
                     stream.write(RulesBackup.encode(data).toByteArray())
@@ -113,6 +114,14 @@ fun SettingsScreen(
                             container.ignored.ignored.value + data.ignoredApps
                         },
                     )
+                    // A switch cannot be merged with another switch, so the settings travel with
+                    // the replacing import only: adding rules leaves this phone as it was.
+                    if (replace) {
+                        data.settings?.let { restored ->
+                            container.settings.update { restored }
+                            container.log.cleanup()
+                        }
+                    }
                     container.rules.insertAll(data.rules, replace)
                 }.getOrNull()
             }

@@ -16,13 +16,13 @@
     <string name="rules_add">Новое правило</string>
     <string name="all_apps">Все приложения</string>
 
-    <string name="rule_mode_block">Блокировать совпадения</string>
-    <string name="rule_mode_allow">Пропускать только совпадения</string>
+    <string name="rule_mode_block">Блокировать</string>
+    <string name="rule_mode_allow">Только совпадения</string>
     <string name="rule_mode_block_badge">Блокировать</string>
     <string name="rule_mode_allow_badge">Только это</string>
     <string name="rule_target_title">Заголовок</string>
     <string name="rule_target_text">Текст</string>
-    <string name="rule_target_both">Заголовок и текст</string>
+    <string name="rule_target_both">Везде</string>
     <string name="rule_disabled">Выкл.</string>
     <string name="rule_untitled">Правило без названия</string>
     <string name="rule_group_ignored">Игнорируется</string>
@@ -120,7 +120,7 @@
     <string name="ignored_empty_body">Добавьте сюда приложения, которые не нужно ни фильтровать, ни записывать, — например мессенджер, где вы читаете все сообщения.</string>
     <string name="ignored_remove">Убрать из списка</string>
 
-    <string name="settings_section_backup">Резервная копия правил</string>
+    <string name="settings_section_backup">Резервная копия</string>
     <string name="settings_section_stats">Статистика</string>
     <string name="settings_section_about">О программе</string>
     <string name="settings_filtering">Фильтрация включена</string>
@@ -133,12 +133,12 @@
     <string name="settings_log_passed_hint">Сохраняет все уведомления, а не только заблокированные, чтобы писать выражения по реальным примерам.</string>
     <string name="settings_retention">Хранить журнал</string>
     <string name="settings_retention_forever">Бессрочно</string>
-    <string name="settings_export">Экспорт правил</string>
-    <string name="settings_export_hint">Сохраняет все правила в файл JSON.</string>
-    <string name="settings_import">Импорт правил</string>
-    <string name="settings_import_hint">Читает правила обратно из файла JSON.</string>
-    <string name="settings_import_title">Импорт правил</string>
-    <string name="settings_import_message">Добавить импортируемые правила к существующим или заменить всё?</string>
+    <string name="settings_export">Экспорт</string>
+    <string name="settings_export_hint">Сохраняет правила, список игнора и настройки в файл JSON.</string>
+    <string name="settings_import">Импорт</string>
+    <string name="settings_import_hint">Читает всё это обратно из файла JSON.</string>
+    <string name="settings_import_title">Импорт копии</string>
+    <string name="settings_import_message">Добавить импортируемые правила к существующим или заменить всё вместе с настройками?</string>
     <string name="settings_import_replace">Заменить</string>
     <string name="settings_import_merge">Добавить</string>
     <string name="settings_export_done">Экспортировано правил: %1$d</string>

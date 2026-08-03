@@ -3,6 +3,7 @@ package ru.krestnikov.pushfilter.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -10,6 +11,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 
 private val LightColors = lightColorScheme(
     primary = Color(0xFF3F5C9A),
@@ -39,6 +41,37 @@ private val DarkColors = darkColorScheme(
     onErrorContainer = Color(0xFFFFDAD6),
 )
 
+/**
+ * Russian labels run roughly a third longer than the English ones they were laid out for, and at
+ * the stock Material size the segmented buttons, chips and captions break onto a second line.
+ * Scaling every style by the same factor keeps the proportions of the type scale intact, and
+ * scales along with the font size the user chose in the system settings.
+ */
+private const val TYPE_SCALE = 0.88f
+
+private fun TextStyle.shrunk(): TextStyle =
+    copy(fontSize = fontSize * TYPE_SCALE, lineHeight = lineHeight * TYPE_SCALE)
+
+private val CompactTypography = Typography().run {
+    copy(
+        displayLarge = displayLarge.shrunk(),
+        displayMedium = displayMedium.shrunk(),
+        displaySmall = displaySmall.shrunk(),
+        headlineLarge = headlineLarge.shrunk(),
+        headlineMedium = headlineMedium.shrunk(),
+        headlineSmall = headlineSmall.shrunk(),
+        titleLarge = titleLarge.shrunk(),
+        titleMedium = titleMedium.shrunk(),
+        titleSmall = titleSmall.shrunk(),
+        bodyLarge = bodyLarge.shrunk(),
+        bodyMedium = bodyMedium.shrunk(),
+        bodySmall = bodySmall.shrunk(),
+        labelLarge = labelLarge.shrunk(),
+        labelMedium = labelMedium.shrunk(),
+        labelSmall = labelSmall.shrunk(),
+    )
+}
+
 @Composable
 fun PushFilterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -53,5 +86,5 @@ fun PushFilterTheme(
         darkTheme -> DarkColors
         else -> LightColors
     }
-    MaterialTheme(colorScheme = colorScheme, content = content)
+    MaterialTheme(colorScheme = colorScheme, typography = CompactTypography, content = content)
 }
