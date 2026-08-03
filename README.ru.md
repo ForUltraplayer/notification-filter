@@ -10,9 +10,9 @@
 
 *English version: [README.md](README.md)*
 
-| Редактор правила | Журнал | Настройки |
+| Правила | Журнал | Настройки |
 |:---:|:---:|:---:|
-| <img src="docs/screenshot-rule.jpg" alt="Редактор правила: приложение, режим, поля и выражение" width="240"> | <img src="docs/screenshot-log.jpg" alt="Журнал уведомлений: что пришло и что заблокировано" width="240"> | <img src="docs/screenshot-settings.jpg" alt="Настройки: главный выключатель, что проверять, срок хранения журнала" width="240"> |
+| <img src="docs/screenshot-rule.jpg" alt="Правила: выражения по приложениям, у каждого свой режим и переключатель" width="240"> | <img src="docs/screenshot-log.jpg" alt="Журнал уведомлений: что пришло и что заблокировано" width="240"> | <img src="docs/screenshot-settings.jpg" alt="Настройки: главный выключатель, что проверять, срок хранения журнала" width="240"> |
 
 ---
 
