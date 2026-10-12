@@ -21,3 +21,15 @@ keystore.properties
 
 # macOS
 .DS_Store
+
+# Local development caches, notes and private configuration
+/.local/
+/.kotlin/
+/BLOCK_HISTORY.md
+/CONTENT_AND_DISTRIBUTION.md
+/DEVELOPMENT.md
+.env
+.env.*
+*.pem
+*.p12
+*.pfx

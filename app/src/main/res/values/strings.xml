@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Push Filter</string>
+    <string name="app_name" translatable="false">알림 필터</string>
 
     <string name="nav_rules">Rules</string>
     <string name="nav_log">Log</string>

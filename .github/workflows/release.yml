@@ -1,12 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to build and publish, for example v1.1'
+        description: 'Tag to build and publish, for example v0.1.0'
         required: true
 
 concurrency:
@@ -69,7 +67,7 @@ jobs:
             VERSION="${{ github.event.inputs.tag }}"
             VERSION="${VERSION#v}"
           fi
-          NAME="push-filter-${VERSION}.apk"
+          NAME="notification-filter-${VERSION}.apk"
           cp app/build/outputs/apk/release/app-release.apk "$NAME"
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
 

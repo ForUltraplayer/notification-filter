@@ -1,5 +1,11 @@
 package ru.krestnikov.pushfilter.data
 
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.asStateFlow
 import android.content.ContentValues
 import android.database.Cursor
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +37,70 @@ class LogRepository(
     private val revision = MutableStateFlow(0L)
     private val insertsSinceCleanup = AtomicInteger(0)
 
+    private val writeFailure = MutableStateFlow(false)
+    val hasWriteFailure = writeFailure.asStateFlow()
+    private val writes = Channel<() -> Unit>(Channel.UNLIMITED)
+
+    init {
+        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+            runCatching {
+                db.writableDatabase.execSQL(
+                    "UPDATE $TABLE_LOG SET block_status = ? WHERE block_status = ?",
+                    arrayOf(BlockStatus.UNCONFIRMED.name, BlockStatus.REQUESTED.name),
+                )
+                cleanup()
+            }.onFailure { reportWriteFailure(it) }
+            for (write in writes) {
+                runCatching { write() }.onFailure { reportWriteFailure(it) }
+            }
+        }
+    }
+
+    private fun reportWriteFailure(error: Throwable) {
+        writeFailure.value = true
+        Log.w("PushFilter", "Could not save block history", error)
+    }
+
+    fun recordBlockAttempt(token: String, packageName: String, keyword: String, requestedAt: Long, title: String, text: String, appLabel: () -> String) {
+        writes.trySend {
+            insert(
+                LogEntry(
+                    packageName = packageName, appLabel = appLabel(),
+                    title = title, text = text, postedAt = requestedAt, blocked = false,
+                    ruleName = keyword, reason = VerdictReason.BLOCKED_BY_RULE,
+                    attemptId = token, blockStatus = BlockStatus.REQUESTED,
+                ),
+            )
+            cleanup()
+        }
+    }
+
+    fun finishBlockAttempt(token: String, status: BlockStatus) {
+        require(status != BlockStatus.REQUESTED)
+        writes.trySend {
+            val values = ContentValues().apply {
+                put("block_status", status.name)
+                put(COL_LOG_BLOCKED, if (status == BlockStatus.CONFIRMED) 1 else 0)
+            }
+            db.writableDatabase.update(
+                TABLE_LOG, values, "attempt_id = ? AND block_status = ?",
+                arrayOf(token, BlockStatus.REQUESTED.name),
+            )
+            revision.update { it + 1 }
+        }
+    }
+
+    fun clearBlockHistory() {
+        writes.trySend {
+            clear()
+            writeFailure.value = false
+        }
+    }
+
+    fun refreshBlockHistory() {
+        writes.trySend { cleanup() }
+    }
+
     fun observe(query: LogQuery): Flow<List<LogEntry>> =
         revision.map { read(query) }.flowOn(Dispatchers.IO)
 
@@ -52,8 +122,10 @@ class LogRepository(
             put(COL_LOG_RULE_NAME, entry.ruleName)
             put(COL_LOG_RULE_PATTERN, entry.rulePattern)
             put(COL_LOG_REASON, entry.reason.name)
+            put("attempt_id", entry.attemptId)
+            put("block_status", entry.blockStatus?.name)
         }
-        db.writableDatabase.insert(TABLE_LOG, null, values)
+        db.writableDatabase.insertOrThrow(TABLE_LOG, null, values)
         if (insertsSinceCleanup.incrementAndGet() >= CLEANUP_EVERY_N_INSERTS) {
             insertsSinceCleanup.set(0)
             cleanup()
@@ -154,6 +226,8 @@ class LogRepository(
         val ruleIdIndex = getColumnIndexOrThrow(COL_LOG_RULE_ID)
         return LogEntry(
             id = getLong(getColumnIndexOrThrow(COL_ID)),
+            attemptId = getString(getColumnIndexOrThrow("attempt_id")),
+            blockStatus = getString(getColumnIndexOrThrow("block_status"))?.let { value -> BlockStatus.entries.firstOrNull { it.name == value } },
             packageName = getString(getColumnIndexOrThrow(COL_LOG_PACKAGE)),
             appLabel = getString(getColumnIndexOrThrow(COL_LOG_APP_LABEL)),
             title = getString(getColumnIndexOrThrow(COL_LOG_TITLE)),
