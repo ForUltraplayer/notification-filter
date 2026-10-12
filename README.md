@@ -85,6 +85,6 @@ CI는 테스트·Lint·빌드를 수행합니다. 자동 릴리스는 비활성�
 [Rai220/push-filter](https://github.com/Rai220/push-filter)의 MIT 소스를 기반으로 UI와 키워드·기록 기능을 변경했습니다. 원본 저작권과 라이선스는 유지합니다.
 
 - 원본: Copyright (c) 2026 Konstantin Krestnikov
-- 변경분: Copyright (c) 2026 ForUltraplayer
+- 변경분: Copyright (c) 2026 @ForUltraplayer
 - 본 프로젝트: [MIT](LICENSE)
 - 원본 러시아어 설명과 스크린샷은 이력·참고 자료이며 현재 UI와 다릅니다.
