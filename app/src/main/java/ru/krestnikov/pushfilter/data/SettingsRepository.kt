@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 data class Settings(
-    val filteringEnabled: Boolean = true,
-    val logAllowed: Boolean = true,
+    val filteringEnabled: Boolean = false,
+    val logAllowed: Boolean = false,
     val ignoreOngoing: Boolean = true,
     val ignoreGroupSummary: Boolean = true,
     /** 0 means "keep forever". */

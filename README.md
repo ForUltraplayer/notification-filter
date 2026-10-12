@@ -1,261 +1,90 @@
-<img src="docs/icon-200.png" alt="Push Filter icon: a funnel with a notification falling away from it" width="88">
+# Notification Filter · 알림 필터
 
-# Push Filter
+알림 제목이나 내용에 지정한 키워드가 포함되면 해당 알림을 지우는 Android 앱입니다. 광고 알림을 간단히 줄이는 것을 목표로 합니다.
 
-**Regex notification filtering for Android.** Silence the ads an app sends without silencing the app.
+[APK 다운로드](https://github.com/ForUltraplayer/notification-filter/releases/latest) · [MIT 라이선스](LICENSE) · [개인정보 안내](PRIVACY.md)
 
-[![CI](https://github.com/Rai220/push-filter/actions/workflows/ci.yml/badge.svg)](https://github.com/Rai220/push-filter/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Rai220/push-filter?sort=semver)](https://github.com/Rai220/push-filter/releases/latest)
-[![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-3DDC84)](#requirements)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 기능
 
-*Русская версия: [README.ru.md](README.ru.md)*
+- 키워드 추가 → 입력 → 저장. 키워드를 수정하거나 삭제할 수 있습니다.
+- 키워드는 정규식이 아닌 일반 문자열로 비교하며, 영문 대소문자를 구분하지 않습니다. 예: `(광고)`.
+- 제외할 앱 선택, 필터 ON/OFF.
+- 차단 기록에서 앱, 키워드, 시간, 처리 상태, 저장된 알림 제목과 내용을 확인합니다.
+- 삭제 요청과 실제 삭제 확인을 구분하며, 확인된 건만 삭제 횟수에 포함합니다.
+- 한국어 UI, 밝은/어두운 테마. 광고·계정·서버 통신이 없습니다.
 
-| Rules | Log | Settings |
-|:---:|:---:|:---:|
-| <img src="docs/screenshot-rule.jpg" alt="Rules: patterns grouped by app, each with its mode and switch" width="240"> | <img src="docs/screenshot-log.jpg" alt="Notification log: what arrived, what was blocked" width="240"> | <img src="docs/screenshot-settings.jpg" alt="Settings: master switch, what to inspect, log retention" width="240"> |
+## 설치 및 사용
 
----
+Android 8.0 이상에서 사용할 수 있습니다.
 
-## The problem
+1. Releases에서 `notification-filter-0.1.0.apk`를 받습니다.
+2. 설치 후 앱의 안내를 따라 Android 설정에서 **알림 접근 권한**을 허용합니다.
+3. 키워드를 저장하고 필요한 앱을 제외한 다음 기능을 켭니다.
+4. 차단 기록의 **삭제 확인** 상태와 알림 내용을 확인합니다.
 
-Your delivery app tells you the courier is downstairs. It also tells you about a 20% discount on
-sushi. Your bank confirms a payment, then offers you a credit card. Android only lets you turn
-off *all* notifications from an app, or keep *all* of them.
+필터는 처음에는 꺼져 있습니다. 앱 화면을 닫아도 Android의 알림 리스너가 연결되어 있으면 알림을 처리합니다. 강제 종료, 권한 해제, 제조사 절전 정책 등에 따른 중단 가능성이 있으며 항상 실행을 보장하지 않습니다.
 
-Push Filter sits between the app and your status bar and decides per notification, using regular
-expressions you write.
+### 알려진 제한
 
-## Features
+- Android가 알림을 게시한 **뒤에 삭제하는 방식**입니다. 팝업이 잠깐 표시될 수 있으며 소리·진동·팝업의 사전 차단을 보장하지 않습니다.
+- 알림 영역에 게시되는 알림을 처리합니다. 다른 앱 화면 안에서 자체적으로 그리는 팝업은 처리하지 않습니다.
+- 진행 중 알림과 그룹 요약 알림은 보호합니다. 확장 본문과 메시지 이력도 검사 대상에 포함될 수 있습니다.
+- 짧거나 흔한 키워드는 필요한 알림까지 지울 수 있습니다.
+- GitHub APK 설치 시 Play 프로텍트가 차단할 수 있습니다. 이번 공개로 해당 문제가 해결된 것은 아닙니다. 차단된다면 보호 기능을 끄지 말고 오류 문구를 개인정보 없이 이슈에 알려 주세요.
 
-- **Two filtering modes.** Block what matches, or allow *only* what matches. Both can be mixed
-  on the same app.
-- **Per-app or global rules.** A rule targets one application or every application at once.
-- **Matches the whole notification.** Title, body, big text, inbox lines and messaging-style
-  conversations are all searched — ads often hide in the extras that a collapsed notification
-  never shows.
-- **Live regex tester.** Paste a real notification into the editor and see the verdict before
-  you save the rule.
-- **Notification log.** Everything that arrived, blocked or passed, with search and filters.
-  One tap turns any log entry into a rule with the app and text pre-filled.
-- **Ignore list.** Applications you never want touched are skipped before any other work, so a
-  chatty messenger costs nothing and never reaches the log.
-- **Backup.** Export and import the rules, the ignore list and every setting as readable JSON.
-- **Log retention.** Keep the log for 1, 7, 30 days or forever; old entries are pruned
-  automatically.
-- **Private by construction.** No network permission, no analytics, no accounts. Notification
-  text never leaves the device.
-- **Material 3 UI** in English and Russian, with dynamic color on Android 12+.
+### v0.1.0 배포 및 서명
 
-## Install
+첫 공개 버전이며 이전 비공개 테스트 버전의 차단 기록·내용 확인 기능을 포함합니다. 표시 버전은 `0.1.0`, 내부 버전 코드는 `4`입니다. 같은 서명을 사용한 기존 테스트 설치본에서 업데이트할 수 있도록 내부 번호를 올렸습니다.
 
-### Download
+**이번 APK는 기존 개발용(debug) 인증서로 서명한 초기 배포본**입니다. 빌드 자체는 최적화된 release 빌드이며 디버깅은 비활성화되어 있습니다. Play 스토어 배포본이 아닙니다. 향후 배포 전용 서명 전환 시 업데이트 경로를 별도로 안내해야 합니다.
 
-Grab the latest signed APK from the [releases page](https://github.com/Rai220/push-filter/releases/latest)
-and open it on your phone. You will need to allow installation from your browser or file manager.
-
-With a cable:
-
-```bash
-adb install push-filter-1.3.apk
+서명 인증서 SHA-256:
+```text
+d586a7026ce58f89a30d5b4215494c26666527be59ca3fdce658e755cb7dcd09
 ```
 
-Questions, reports and discussion: the [4PDA thread](https://4pda.to/forum/index.php?showtopic=1124713),
-in Russian.
+다른 PC에서 직접 빌드하면 서명이 달라질 수 있으므로 기존 설치본을 바로 업데이트하지 못할 수 있습니다. 서명키와 비밀번호는 저장소에 포함하지 않습니다.
 
-### First run
+## 기록과 개인정보
 
-The app needs **notification access** — the permission that lets it read and dismiss
-notifications. It cannot be granted from the app itself, so Push Filter shows a banner that takes
-you to the right system screen. Find *Push Filter* in the list and enable it.
+차단 대상 알림의 제목·내용과 처리 상태를 기기 내부에 저장합니다. 최근 7일·최대 5,000건을 보관하고 화면에는 최근 500건을 표시합니다. 오래된 기록 정리는 앱 진입 및 기록 저장 등 작업 시 수행됩니다. 기록 전체 삭제가 가능합니다.
 
-Nothing is filtered until you add a rule. Give it half an hour of normal use first, then open the
-**Log** tab: you will see the real text of everything that arrived, which is what you write
-patterns against.
+데이터는 앱 전용 저장소에 저장되며 별도의 DB 암호화는 적용하지 않았습니다. 알림에 포함된 개인정보도 저장될 수 있습니다. 자세한 내용은 [개인정보 안내](PRIVACY.md)를 확인하세요.
 
-## How a notification is judged
+## 소스 빌드
 
-For every notification that arrives, in order:
+- JDK 17 이상(로컬 검증: JDK 21)
+- Android SDK Platform 36 및 Build Tools 35.0.0
+- Gradle Wrapper 8.14.3, Android Gradle Plugin 8.13.0
+- Android Studio 또는 명령행 SDK
 
-1. **Is the app on the ignore list?** → left alone, not logged.
-2. **Is filtering switched off?** → left alone.
-3. **Is it an ongoing notification or a group summary?** → skipped, if those settings are on.
-4. **Does any enabled blocking rule match?** → **blocked**. Blocking rules are a veto.
-5. **Does any enabled allowing rule match?** → **passed**.
-6. **Does the app have allowing rules that all failed to match?** → **blocked**. One allow rule
-   turns the app into a whitelist.
-7. **Otherwise** → passed.
+저장소를 복제한 후 Android Studio에서 열어 SDK 경로를 지정합니다. Windows에서는 Java 도구의 경로 인코딩 문제를 피하도록 영문 경로에 체크아웃하는 것을 권장합니다.
 
-Rules with the *All applications* target participate in steps 4–6 for every app.
-
-That precedence is what lets the two modes coexist. You can whitelist your bank down to payment
-confirmations while separately blocking one marketing phrase across every app on the phone.
-
-## Writing rules
-
-Patterns are ordinary regular expressions — `|`, `^`, `$`, `\d`, `{2,4}` all mean what you expect.
-They are **searched anywhere** in the text, so `sale` matches `Big sale today` — you do not need
-`.*` around it. Matching ignores case unless you turn on *Case sensitive*, and `^`/`$` anchor to a
-line rather than the whole text. The editor keeps a few worked examples next to the field.
-
-| Goal | Pattern | Mode |
-| --- | --- | --- |
-| Drop common marketing words | `sale\|discount\|promo\|% off` | Block |
-| Drop Russian marketing words | `скидк\|акци\|распродаж\|промокод` | Block |
-| Drop anything that starts with a label | `^Ad: ` | Block |
-| Keep only payment notices | `payment\|withdrawal\|balance` | Allow only |
-| Keep only messages from one person | `^Anna: ` | Allow only |
-| Drop a specific recurring nag | `Rate the app` | Block |
-
-Two shortcuts worth knowing:
-
-- In the rule editor, **Match against** narrows the search to just the title or just the body.
-  Useful when an app puts the sender in the title and you only care about that.
-- In the log, **Create a rule from this** pre-fills the app and escapes the notification text
-  into a literal pattern. Start there and widen it.
-
-## Backup format
-
-Export produces readable JSON — the rules, the ignore list and every setting — so a backup can be
-edited by hand or shared:
-
-```json
-{
-  "format": 2,
-  "exportedAt": 1753795200000,
-  "rules": [
-    {
-      "package": "com.example.shop",
-      "name": "Promotions",
-      "mode": "BLOCK",
-      "pattern": "sale|discount|promo",
-      "target": "BOTH",
-      "caseSensitive": false,
-      "enabled": true
-    }
-  ],
-  "ignoredApps": ["org.telegram.messenger"],
-  "settings": {
-    "filteringEnabled": true,
-    "logAllowed": true,
-    "ignoreOngoing": true,
-    "ignoreGroupSummary": true,
-    "retentionDays": 7
-  }
-}
+Windows:
+```powershell
+.\gradlew.bat testDebugUnitTest lintDebug assembleDebug assembleRelease
 ```
 
-`mode` is `BLOCK` or `ALLOW`, `target` is `TITLE`, `TEXT` or `BOTH`, and `package` may be `*` for
-a rule that applies everywhere. Every field of `settings` is optional and falls back to its
-default, and a file without the object at all — anything exported before format 2 — is still
-imported, leaving the settings on this phone untouched.
-
-On import you choose whether to replace everything or add to what you already have. *Replace*
-restores the settings as well; *Add* only brings in the rules and the ignore list, because there
-is no sensible way to merge two switches.
-
-## Build from source
-
-Requires **JDK 17** and the Android SDK (compile SDK 36). No Android Studio needed.
-
-```bash
-git clone https://github.com/Rai220/push-filter.git
-cd push-filter
-./gradlew assembleDebug
+macOS/Linux:
+```sh
+./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease
 ```
 
-The APK lands in `app/build/outputs/apk/debug/app-debug.apk`.
+결과: `app/build/outputs/apk/release/app-release.apk`.
 
-Run the checks the CI runs:
+배포용 키를 직접 사용하는 경우 다음 환경 변수를 설정합니다: `PUSHFILTER_KEYSTORE`, `PUSHFILTER_KEYSTORE_PASSWORD`, `PUSHFILTER_KEY_ALIAS`, `PUSHFILTER_KEY_PASSWORD`. 설정하지 않으면 개발용 키로 서명합니다. 키를 Git에 추가하지 마세요.
 
-```bash
-./gradlew testDebugUnitTest lintDebug
-```
+CI는 테스트·Lint·빌드를 수행합니다. 자동 릴리스는 비활성화했으며 수동 Release 워크플로는 별도 서명용 GitHub Secrets를 설정한 경우에만 사용할 수 있습니다. v0.1.0 첨부 APK는 로컬에서 검증 후 업로드한 파일입니다.
 
-`assembleRelease` also works without any setup: when no signing key is present in the
-environment, the release build falls back to the debug key so the result is still installable.
+## 검증 범위
 
-### Signing your own release
+단위 테스트와 Android Lint 및 debug/release 빌드로 검증합니다. 이전 테스트 설치본에서 Galaxy S25 Ultra / One UI 9.0의 키워드 일치 알림 삭제·삭제 확인 기록·제외 앱 동작을 사용자가 확인했습니다. 이번 공개 APK 전체 기능, 재부팅·장시간 대기 및 모든 앱의 소리/팝업 동작에 대한 실기기 검증은 완료되지 않았습니다.
 
-Release builds read their key from four environment variables. Nothing is ever read from a file
-inside the repository.
+## 원본 및 라이선스
 
-```bash
-export PUSHFILTER_KEYSTORE=/path/to/release.jks
-export PUSHFILTER_KEYSTORE_PASSWORD=...
-export PUSHFILTER_KEY_ALIAS=...
-export PUSHFILTER_KEY_PASSWORD=...
-./gradlew assembleRelease
-```
+[Rai220/push-filter](https://github.com/Rai220/push-filter)의 MIT 소스를 기반으로 UI와 키워드·기록 기능을 변경했습니다. 원본 저작권과 라이선스는 유지합니다.
 
-To publish from a fork, add these repository secrets and push a `v*` tag:
-
-| Secret | Contents |
-| --- | --- |
-| `KEYSTORE_BASE64` | The keystore file, base64 encoded (`base64 -i release.jks`) |
-| `KEYSTORE_PASSWORD` | Keystore password |
-| `KEY_ALIAS` | Key alias |
-| `KEY_PASSWORD` | Key password |
-
-The release workflow refuses to publish if the keystore secret is missing, verifies the signature
-of the finished APK, and deletes the decoded keystore from the runner afterwards.
-
-## How it works
-
-A [`NotificationListenerService`](app/src/main/java/ru/krestnikov/pushfilter/filter/NotificationFilterService.kt)
-receives every posted notification, extracts its text, asks the filter engine for a verdict and
-calls `cancelNotification()` when the verdict is *blocked*.
-
-```
-app/src/main/java/ru/krestnikov/pushfilter/
-├── data/          SQLite storage, rules, log, settings, JSON backup
-├── filter/        Text extraction, regex cache, FilterEngine, the listener service
-├── apps/          Installed-app labels and icons
-└── ui/            Compose screens: rules, editor, log, settings
-```
-
-Design notes:
-
-- **Rules are held in memory.** The verdict is computed on the main thread, microseconds after
-  the notification is posted, so it cannot wait on disk. SQLite is the source of truth; a
-  `StateFlow` snapshot is what the listener reads.
-- **Compiled patterns are cached.** Recompiling a `Regex` per notification would be wasteful, and
-  invalid patterns are cached as failures so a broken rule stays cheap.
-- **The log is deduplicated.** Apps re-post the same notification on every progress update; the
-  service drops repeats of identical content within a 5 second window.
-- **No Room, no KSP.** Two tables do not justify an annotation processor and its version matrix,
-  so storage is a plain `SQLiteOpenHelper` with WAL enabled.
-
-The filtering rules are covered by unit tests in
-[`FilterEngineTest`](app/src/test/java/ru/krestnikov/pushfilter/filter/FilterEngineTest.kt).
-
-## Requirements
-
-- Android 8.0 (API 26) or newer
-- Notification access granted to the app
-
-## Known limitations
-
-These come from Android itself and cannot be fixed by the app:
-
-- **A blocked notification may flash for a moment.** Listeners are notified *after* the
-  notification is posted, so dismissal happens milliseconds later.
-- **Sound and vibration are chosen by the sending app** and cannot always be suppressed before
-  the notification is dismissed. Set the app's channel to silent if this bothers you.
-- **Aggressive battery managers** on Xiaomi, Huawei, Samsung and others may kill the listener
-  after a reboot. Allow the app to run in the background if filtering goes quiet.
-- **Notification text is what gets matched.** Content that only exists inside a custom
-  `RemoteViews` layout is not readable.
-
-## Privacy
-
-The app declares no internet permission. Rules, the log and settings live in the app's private
-storage, are excluded from cloud backup and device transfer, and are only ever written to a file
-you pick yourself via the export button.
-
-`QUERY_ALL_PACKAGES` is declared for one reason: the rule editor lists the applications installed
-on the device so you can pick one.
-
-## License
-
-[MIT](LICENSE)
+- 원본: Copyright (c) 2026 Konstantin Krestnikov
+- 변경분: Copyright (c) 2026 rudals252
+- 본 프로젝트: [MIT](LICENSE)
+- 원본 러시아어 설명과 스크린샷은 이력·참고 자료이며 현재 UI와 다릅니다.

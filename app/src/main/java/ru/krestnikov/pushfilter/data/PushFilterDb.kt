@@ -44,18 +44,25 @@ class PushFilterDb(context: Context) :
                 $COL_LOG_RULE_ID INTEGER,
                 $COL_LOG_RULE_NAME TEXT,
                 $COL_LOG_RULE_PATTERN TEXT,
-                $COL_LOG_REASON TEXT NOT NULL
+                $COL_LOG_REASON TEXT NOT NULL,
+                attempt_id TEXT,
+                block_status TEXT
             )
             """.trimIndent(),
         )
         db.execSQL("CREATE INDEX idx_log_posted_at ON $TABLE_LOG ($COL_LOG_POSTED_AT)")
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE $TABLE_LOG ADD COLUMN attempt_id TEXT")
+            db.execSQL("ALTER TABLE $TABLE_LOG ADD COLUMN block_status TEXT")
+        }
+    }
 
     companion object {
         private const val DB_NAME = "push_filter.db"
-        private const val DB_VERSION = 1
+        private const val DB_VERSION = 2
 
         const val COL_ID = "id"
 

@@ -19,15 +19,15 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "ru.krestnikov.pushfilter"
+        applicationId = "com.rudals252.keywordfilter"
         minSdk = 26
         targetSdk = 36
         versionCode = 4
-        versionName = "1.3"
+        versionName = "0.1.0"
     }
 
     androidResources {
-        localeFilters += setOf("en", "ru")
+        localeFilters += setOf("en", "ru", "ko")
     }
 
     signingConfigs {
@@ -44,8 +44,8 @@ android {
     buildTypes {
         release {
             // Without a keystore in the environment the release build falls back to the debug
-            // key, so anyone cloning the repo still gets an installable APK. Only the artifacts
-            // published from CI carry the real signature.
+            // key, so anyone cloning the repo still gets an installable APK. Release notes
+            // must identify the signing certificate used for each published artifact.
             signingConfig = if (releaseKeystore != null) {
                 signingConfigs.getByName("release")
             } else {

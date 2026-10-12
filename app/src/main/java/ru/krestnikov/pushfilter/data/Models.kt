@@ -39,6 +39,8 @@ enum class VerdictReason {
     NO_ALLOW_RULE_MATCHED,
 }
 
+enum class BlockStatus { REQUESTED, CONFIRMED, UNCONFIRMED, FAILED }
+
 data class LogEntry(
     val id: Long = 0L,
     val packageName: String,
@@ -51,6 +53,8 @@ data class LogEntry(
     val ruleName: String? = null,
     val rulePattern: String? = null,
     val reason: VerdictReason,
+    val attemptId: String? = null,
+    val blockStatus: BlockStatus? = null,
 )
 
 data class LogStats(val blocked: Int, val allowed: Int) {

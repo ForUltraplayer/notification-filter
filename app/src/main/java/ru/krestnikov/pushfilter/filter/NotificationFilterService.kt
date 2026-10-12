@@ -1,117 +1,94 @@
+// @file NotificationFilterService.kt
+// @author: rudals252
+// @brief Filter notifications and retain matched notification content for local inspection.
 package ru.krestnikov.pushfilter.filter
 
 import android.app.Notification
 import android.content.ComponentName
-import android.os.SystemClock
+import android.os.Handler
+import android.os.Looper
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import ru.krestnikov.pushfilter.AppContainer
 import ru.krestnikov.pushfilter.PushFilterApplication
-import ru.krestnikov.pushfilter.data.LogEntry
+import ru.krestnikov.pushfilter.data.BlockStatus
 
 class NotificationFilterService : NotificationListenerService() {
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val recentlyLogged = HashMap<String, Long>()
-
     private lateinit var container: AppContainer
+    private val attempts = BlockAttemptTracker()
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate() {
         super.onCreate()
         container = (application as PushFilterApplication).container
     }
 
-    override fun onDestroy() {
-        scope.cancel()
-        super.onDestroy()
+    override fun onListenerConnected() {
+        container.rules.snapshot()
+        connection.value = true
     }
 
-    override fun onListenerConnected() {
-        // Warms the in-memory rule cache so the first notification is not delayed by disk I/O.
-        container.rules.snapshot()
-        scope.launch { runCatching { container.log.cleanup() } }
+    private fun finishPending() {
+        handler.removeCallbacksAndMessages(null)
+        attempts.drain().forEach { container.log.finishBlockAttempt(it.token, BlockStatus.UNCONFIRMED) }
     }
 
     override fun onListenerDisconnected() {
-        // The system unbinds listeners on package updates; ask to be bound again.
+        connection.value = false
+        finishPending()
         runCatching { requestRebind(ComponentName(this, NotificationFilterService::class.java)) }
+    }
+
+    override fun onDestroy() {
+        connection.value = false
+        finishPending()
+        super.onDestroy()
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         val notification = sbn?.notification ?: return
         if (sbn.packageName == packageName) return
-        if (container.ignored.contains(sbn.packageName)) return
-
         val settings = container.settings.current()
-        if (!settings.filteringEnabled) return
-        if (settings.ignoreOngoing && notification.hasFlag(Notification.FLAG_ONGOING_EVENT)) return
-        if (settings.ignoreGroupSummary && notification.hasFlag(Notification.FLAG_GROUP_SUMMARY)) return
-
+        if (!settings.filteringEnabled || container.ignored.contains(sbn.packageName)) return
+        if (settings.ignoreOngoing && notification.flags and Notification.FLAG_ONGOING_EVENT != 0) return
+        if (settings.ignoreGroupSummary && notification.flags and Notification.FLAG_GROUP_SUMMARY != 0) return
         val content = NotificationContentExtractor.extract(notification)
         if (content.isEmpty) return
-
         val verdict = FilterEngine.evaluate(sbn.packageName, content, container.rules.snapshot())
+        if (!verdict.blocked) return
 
-        if (verdict.blocked) {
-            runCatching { cancelNotification(sbn.key) }
-                .onFailure { Log.w(TAG, "Could not dismiss ${sbn.key}", it) }
-        } else if (!settings.logAllowed) {
+        val attempt = attempts.begin(sbn.key, sbn.postTime) ?: return
+        val sourcePackage = sbn.packageName
+        container.log.recordBlockAttempt(
+            attempt.token, sourcePackage, verdict.rule?.name.orEmpty(), System.currentTimeMillis(), content.title, content.text,
+        ) { container.apps.label(sourcePackage) }
+
+        runCatching { cancelNotification(sbn.key) }.onFailure {
+            attempts.finish(attempt.token)
+            container.log.finishBlockAttempt(attempt.token, BlockStatus.FAILED)
+            Log.w(TAG, "Could not dismiss notification", it)
             return
         }
-
-        if (!shouldLog(sbn.key, content, verdict.blocked)) return
-
-        val packageName = sbn.packageName
-        val postedAt = sbn.postTime.takeIf { it > 0L } ?: System.currentTimeMillis()
-        scope.launch {
-            runCatching {
-                container.log.insert(
-                    LogEntry(
-                        packageName = packageName,
-                        appLabel = container.apps.label(packageName),
-                        title = content.title,
-                        text = content.text,
-                        postedAt = postedAt,
-                        blocked = verdict.blocked,
-                        ruleId = verdict.rule?.id,
-                        ruleName = verdict.rule?.name,
-                        rulePattern = verdict.rule?.pattern,
-                        reason = verdict.reason,
-                    ),
-                )
-            }.onFailure { Log.w(TAG, "Could not write log entry", it) }
-        }
-    }
-
-    /**
-     * Apps re-post the same notification on every minor update (progress, read receipts).
-     * Without this the log fills up with identical rows.
-     */
-    private fun shouldLog(key: String, content: NotificationContent, blocked: Boolean): Boolean {
-        val id = "$key|$blocked|${content.title}|${content.text}"
-        val now = SystemClock.elapsedRealtime()
-        synchronized(recentlyLogged) {
-            if (recentlyLogged.size > MAX_DEDUPE_ENTRIES) {
-                recentlyLogged.entries.removeAll { now - it.value > DEDUPE_WINDOW_MS }
+        handler.postDelayed({
+            if (attempts.finish(attempt.token) != null) {
+                container.log.finishBlockAttempt(attempt.token, BlockStatus.UNCONFIRMED)
             }
-            val previous = recentlyLogged[id]
-            if (previous != null && now - previous < DEDUPE_WINDOW_MS) return false
-            recentlyLogged[id] = now
-            return true
-        }
+        }, BlockAttemptTracker.CONFIRMATION_TIMEOUT_MS)
     }
 
-    private fun Notification.hasFlag(flag: Int) = (flags and flag) != 0
+    override fun onNotificationRemoved(sbn: StatusBarNotification?, rankingMap: RankingMap?, reason: Int) {
+        if (sbn == null) return
+        val attempt = attempts.removed(sbn.key, sbn.postTime) ?: return
+        val status = if (reason == REASON_LISTENER_CANCEL) BlockStatus.CONFIRMED else BlockStatus.UNCONFIRMED
+        container.log.finishBlockAttempt(attempt.token, status)
+    }
 
-    private companion object {
-        const val TAG = "PushFilter"
-        const val DEDUPE_WINDOW_MS = 5_000L
-        const val MAX_DEDUPE_ENTRIES = 300
+    companion object {
+        private const val TAG = "PushFilter"
+        private val connection = MutableStateFlow(false)
+        val connected = connection.asStateFlow()
     }
 }
